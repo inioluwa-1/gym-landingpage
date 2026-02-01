@@ -6,20 +6,32 @@ import Coaches from './components/Coaches';
 import Trainers from './components/Trainers';
 import Pricing from './components/Pricing';
 import Reviews from './components/Reviews';
+import CallToAction from './components/CallToAction';
+import Footer from './components/Footer';
 
 export default function Home() {
   return (
     <div className="bg-black min-h-screen">
       <Navbar />
       <main>
-        <Hero />
+        <div id="home">
+          <Hero />
+        </div>
         <Stats />
-        <WhyChooseUs />
+        <div id="about">
+          <WhyChooseUs />
+        </div>
         <Coaches />
         <Trainers />
-        <Pricing />
+        <div id="services">
+          <Pricing />
+        </div>
         <Reviews />
+        <div id="contact">
+          <CallToAction />
+        </div>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -11,20 +11,20 @@ export default function Trainers() {
   ];
 
   return (
-    <section className="py-20 px-8 bg-gray-50">
+    <section className="py-12 md:py-20 px-4 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
             Meet Our Trainers
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+            Our team of elite fitness professionals are here to push you beyond your limits and celebrate every victory
           </p>
         </div>
 
         {/* Trainers Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {/* Trainer 1 - Portrait */}
           <div className="relative h-79 overflow-hidden rounded-3xl">
             <Image

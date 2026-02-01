@@ -5,45 +5,45 @@ export default function WhyChooseUs() {
   const features = [
     {
       icon: <Dumbbell size={24} />,
-      title: 'Lorem Ipsum amid',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+      title: 'Modern Equipment',
+      description: 'Access cutting-edge fitness machines and free weights that cater to all skill levels'
     },
     {
       icon: <Award size={24} />,
-      title: 'Lorem Ipsum amid',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+      title: 'Certified Trainers',
+      description: 'Work with experienced professionals dedicated to helping you reach your fitness goals'
     },
     {
       icon: <Lightbulb size={24} />,
-      title: 'Lorem Ipsum amid',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+      title: 'Flexible Programs',
+      description: 'Choose from diverse workout plans designed to fit your schedule and objectives'
     },
     {
       icon: <Zap size={24} />,
-      title: 'Lorem Ipsum amid',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+      title: 'Quick Results',
+      description: 'See real progress with our proven training methods and personalized approach'
     }
   ];
 
   return (
-    <section className="py-20 px-8 bg-gray-50">
+    <section className="py-12 md:py-20 px-4 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
             Why Choose Us
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+            Experience the difference with our premium facilities, expert coaches, and supportive community committed to your success
           </p>
         </div>
 
         {/* Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="flex gap-4">
+              <div key={index} className="flex gap-3 md:gap-4">
                 {/* Icon */}
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-white">
                   {feature.icon}
@@ -51,10 +51,10 @@ export default function WhyChooseUs() {
                 
                 {/* Text */}
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-1 md:mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 text-base leading-relaxed">
+                  <p className="text-gray-400 text-sm md:text-base leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -63,9 +63,9 @@ export default function WhyChooseUs() {
           </div>
 
           {/* Images Grid */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
             {/* Top Left Image */}
-            <div className="relative h-48 rounded-2xl overflow-hidden">
+            <div className="relative h-36 md:h-48 rounded-2xl overflow-hidden">
               <Image
                 src="/gym1.jpg"
                 alt="Gym training"
@@ -85,7 +85,7 @@ export default function WhyChooseUs() {
             </div>
 
             {/* Bottom Left Image */}
-            <div className="relative h-48 rounded-2xl overflow-hidden">
+            <div className="relative h-36 md:h-48 rounded-2xl overflow-hidden">
               <Image
                 src="/gym2.jpg"
                 alt="Gym interior"
