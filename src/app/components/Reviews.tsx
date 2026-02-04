@@ -93,9 +93,9 @@ export default function Reviews() {
     <section className="py-12 md:py-20 px-4 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start mb-12 md:mb-16 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start mb-12 md:mb-16 gap-4" data-aos="fade-down">
           <div>
-            <p className="text-gray-400 text-base md:text-lg mb-2">Reviews</p>
+            <p className="text-base md:text-lg mb-2 font-semibold" style={{ color: '#FF0336' }}>Reviews</p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black">
               YOUR OPINIONS
             </h2>
@@ -103,7 +103,8 @@ export default function Reviews() {
 
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-black text-white px-4 md:px-6 py-2 md:py-3 rounded-md text-sm md:text-base font-semibold hover:bg-gray-800 transition"
+            className="text-white px-4 md:px-6 py-2 md:py-3 rounded-md text-sm md:text-base font-semibold hover:opacity-90 transition"
+            style={{ backgroundColor: '#FF0336' }}
           >
             + Your Opinions
           </button>
@@ -179,7 +180,19 @@ export default function Reviews() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
+                  className="w-full text-white py-3 rounded-lg font-semibold transition"
+                  style={{ backgroundColor: '#FF0336' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FF5A7A'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FF0336'}
+                  onTouchStart={(e) => e.currentTarget.style.backgroundColor = '#FF5A7A'}
+                  onTouchEnd={(e) => {
+                    const element = e.currentTarget;
+                    setTimeout(() => {
+                      if (element) {
+                        element.style.backgroundColor = '#FF0336';
+                      }
+                    }, 300);
+                  }}
                 >
                   Submit Review
                 </button>
@@ -191,7 +204,7 @@ export default function Reviews() {
 
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Circular Images */}
-          <div className="relative h-64 md:h-80 flex items-center justify-center order-2 lg:order-1">
+          <div className="relative h-64 md:h-80 flex items-center justify-center order-2 lg:order-1" data-aos="zoom-in">
             {/* Image 1 - Top Left */}
             <div className="absolute top-4 md:top-8 left-1/4 w-20 md:w-28 h-20 md:h-28 rounded-full overflow-hidden border-4 border-white shadow-lg z-10">
               <Image
@@ -234,7 +247,7 @@ export default function Reviews() {
           </div>
 
           {/* Testimonial Cards */}
-          <div className="order-1 lg:order-2">
+          <div className="order-1 lg:order-2" data-aos="fade-up" data-aos-delay="100">
             <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 md:mb-8">
               {/* Current Card */}
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-md flex-1">

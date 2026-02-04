@@ -3,7 +3,7 @@ import { Facebook, Twitter, Instagram } from 'lucide-react';
 
 export default function Footer() {
   const quickLinks = ['Home', 'About Us', 'Services', 'Contact'];
-  const programsItems = ['Weight Training', 'Cardio', 'Yoga', 'Boxing'];
+  const programsItems = ['Cycling', 'Karate', 'Power', 'Meditation', 'Martial Arts', 'Workout'];
   const hoursItems = ['Mon-Fri: 5AM-11PM', 'Sat-Sun: 7AM-9PM', 'Holidays: 8AM-6PM', '24/7 Elite Access'];
   const supportItems = ['Help Center', 'FAQs', 'Membership', 'Cancellation'];
 

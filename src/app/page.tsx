@@ -4,6 +4,8 @@ import Stats from './components/Stats';
 import WhyChooseUs from './components/WhyChooseUs';
 import Coaches from './components/Coaches';
 import Trainers from './components/Trainers';
+import FeaturedClasses from './components/FeaturedClasses';
+import BMICalculator from './components/BMICalculator';
 import Pricing from './components/Pricing';
 import Reviews from './components/Reviews';
 import CallToAction from './components/CallToAction';
@@ -23,6 +25,8 @@ export default function Home() {
         </div>
         <Coaches />
         <Trainers />
+        <FeaturedClasses />
+        <BMICalculator />
         <div id="services">
           <Pricing />
         </div>

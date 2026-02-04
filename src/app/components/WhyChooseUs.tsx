@@ -29,7 +29,7 @@ export default function WhyChooseUs() {
     <section className="py-12 md:py-20 px-4 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-12 md:mb-16" data-aos="fade-down">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
             Why Choose Us
           </h2>
@@ -43,9 +43,9 @@ export default function WhyChooseUs() {
           {/* Features */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="flex gap-3 md:gap-4">
+              <div key={index} className="flex gap-3 md:gap-4" data-aos="fade-up" data-aos-delay={index * 100}>
                 {/* Icon */}
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-white">
+                <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: '#FF0336' }}>
                   {feature.icon}
                 </div>
                 
@@ -63,7 +63,7 @@ export default function WhyChooseUs() {
           </div>
 
           {/* Images Grid */}
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 gap-3 md:gap-4" data-aos="zoom-in" data-aos-delay="200">
             {/* Top Left Image */}
             <div className="relative h-36 md:h-48 rounded-2xl overflow-hidden">
               <Image
