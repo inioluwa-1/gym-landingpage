@@ -115,10 +115,10 @@ export default function Pricing() {
               </p>
 
               {/* Features List */}
-              <ul className="space-y-4 mb-12 flex-grow">
+              <ul className="space-y-4 mb-12 grow">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-gray-400 transition-colors">
+                    <div className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-gray-400 transition-colors">
                       <Check size={14} className="text-white transition-colors" />
                     </div>
                     <span className="text-sm text-gray-600 transition-colors">

@@ -45,7 +45,7 @@ export default function WhyChooseUs() {
             {features.map((feature, index) => (
               <div key={index} className="flex gap-3 md:gap-4" data-aos="fade-up" data-aos-delay={index * 100}>
                 {/* Icon */}
-                <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: '#FF0336' }}>
+                <div className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: '#FF0336' }}>
                   {feature.icon}
                 </div>
                 
