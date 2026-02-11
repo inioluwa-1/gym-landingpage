@@ -1,7 +1,46 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Bike, Target, Dumbbell, Heart, Sparkles, Activity } from 'lucide-react';
 
 export default function FeaturedClasses() {
+  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    // Only run on mobile
+    if (window.innerWidth >= 768) return;
+
+    const observers = cardRefs.current.map((card, index) => {
+      if (!card) return null;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisibleCards((prev) => new Set(prev).add(index));
+            } else {
+              setVisibleCards((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(index);
+                return newSet;
+              });
+            }
+          });
+        },
+        { threshold: 0.5 } // Trigger when 50% of card is visible
+      );
+
+      observer.observe(card);
+      return observer;
+    });
+
+    return () => {
+      observers.forEach((observer) => observer?.disconnect());
+    };
+  }, []);
+
   const classes = [
     {
       name: 'Cycling',
@@ -65,6 +104,7 @@ export default function FeaturedClasses() {
           {classes.map((classItem, index) => (
             <div
               key={index}
+              ref={(el) => { cardRefs.current[index] = el; }}
               className="relative h-80 rounded-2xl overflow-hidden group cursor-pointer"
               data-aos="fade-up"
               data-aos-delay={index * 100}
@@ -75,9 +115,15 @@ export default function FeaturedClasses() {
                   src={classItem.image}
                   alt={classItem.name}
                   fill
-                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                  className={`object-cover transition-all duration-500 ${
+                    visibleCards.has(index) ? 'grayscale-0' : 'grayscale md:grayscale md:group-hover:grayscale-0'
+                  }`}
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
+                <div 
+                  className={`absolute inset-0 transition-all duration-500 ${
+                    visibleCards.has(index) ? 'bg-black/20' : 'bg-black/40 md:group-hover:bg-black/20'
+                  }`} 
+                />
               </div>
 
               {/* Content */}

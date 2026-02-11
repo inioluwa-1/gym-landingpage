@@ -18,8 +18,18 @@ export default function BMICalculator() {
       return;
     }
 
-    // Convert height from feet/inches to meters
-    const heightInMeters = parseFloat(height) * 0.3048;
+    const heightValue = parseFloat(height);
+    let heightInMeters;
+
+    // Auto-detect format: if height > 50, assume it's in cm, otherwise feet
+    if (heightValue > 50) {
+      // Input is in centimeters, convert to meters
+      heightInMeters = heightValue / 100;
+    } else {
+      // Input is in feet, convert to meters
+      heightInMeters = heightValue * 0.3048;
+    }
+
     const weightInKg = parseFloat(weight);
     const ageNum = parseInt(age);
 
@@ -83,7 +93,7 @@ export default function BMICalculator() {
                   type="text"
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
-                  placeholder="Height (feet/inch e.g. 5'6)"
+                  placeholder="Height (cm or feet)"
                   className="w-full px-4 md:px-6 py-3 md:py-4 bg-gray-50 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-800"
                 />
                 <input
@@ -151,66 +161,55 @@ export default function BMICalculator() {
                 Calculate
                 <ArrowUpRight size={20} />
               </button>
-
-              {/* Results */}
-              {bmi !== null && (
-                <div className="mt-6 p-6 bg-gray-50 rounded-lg">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-gray-600 text-sm">Your BMI:</p>
-                      <p className="text-3xl font-bold text-gray-900">{bmi}</p>
-                      <p className="text-gray-700 font-semibold">{getWeightStatus(bmi)}</p>
-                    </div>
-                    {bmr && (
-                      <div>
-                        <p className="text-gray-600 text-sm">Daily Calorie Needs (BMR):</p>
-                        <p className="text-2xl font-bold text-gray-900">{bmr} cal/day</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* BMI Reference Table */}
+          {/* Results Section */}
           <div data-aos="fade-up" data-aos-delay="100">
-            <div className="mb-8 md:mb-12">
-              <div className="grid grid-cols-2 gap-6 md:gap-8">
-                <div>
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
-                    BMI
-                  </h3>
-                  <div className="space-y-3 md:space-y-4">
-                    {bmiCategories.map((category, index) => (
-                      <p key={index} className="text-gray-700 text-sm md:text-base">
-                        {category.range}
-                      </p>
-                    ))}
+            {bmi !== null ? (
+              <div className="bg-gray-50 rounded-lg p-8 md:p-12">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+                  Your Results
+                </h3>
+                
+                <div className="space-y-8">
+                  <div>
+                    <p className="text-gray-600 text-base md:text-lg mb-2">Your BMI:</p>
+                    <p className="text-5xl md:text-6xl font-bold text-gray-900 mb-3">{bmi}</p>
+                    <p className="text-xl md:text-2xl font-semibold" style={{ color: '#FF0336' }}>
+                      {getWeightStatus(bmi)}
+                    </p>
                   </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
-                    WEIGHT STATUS
-                  </h3>
-                  <div className="space-y-3 md:space-y-4">
-                    {bmiCategories.map((category, index) => (
-                      <p key={index} className="text-gray-700 text-sm md:text-base">
-                        {category.status}
-                      </p>
-                    ))}
+                  
+                  {bmr && (
+                    <div className="pt-6 border-t border-gray-300">
+                      <p className="text-gray-600 text-base md:text-lg mb-2">Daily Calorie Needs:</p>
+                      <p className="text-4xl md:text-5xl font-bold text-gray-900">{bmr} <span className="text-2xl text-gray-600">cal/day</span></p>
+                      <p className="text-sm text-gray-500 mt-2">Based on your activity level</p>
+                    </div>
+                  )}
+                  
+                  <div className="pt-6 border-t border-gray-300">
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      <span className="font-semibold text-gray-900">BMR</span> (Basal Metabolic Rate) represents the calories you burn at rest. 
+                      <span className="font-semibold text-gray-900"> BMI</span> (Body Mass Index) measures body fat based on height and weight.
+                    </p>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="text-gray-600 text-sm md:text-base">
-              <p>
-                <span className="font-semibold text-gray-900">BMR</span> metabolic rate /{' '}
-                <span className="font-semibold text-gray-900">BMI</span> body mass index
-              </p>
-            </div>
+            ) : (
+              <div className="bg-gray-50 rounded-lg p-8 md:p-12 flex items-center justify-center min-h-100">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">📊</div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                    Calculate Your BMI
+                  </h3>
+                  <p className="text-gray-600 max-w-md">
+                    Fill in your details and click Calculate to see your Body Mass Index and daily calorie needs.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

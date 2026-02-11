@@ -76,7 +76,7 @@ export default function Pricing() {
               onClick={() => setIsYearly(true)}
               className={`px-4 md:px-6 py-2 rounded-full transition text-sm md:text-base ${
                 isYearly
-                  ? 'bg-gray-900 text-white shadow'
+                  ? 'bg-white text-gray-900 shadow'
                   : 'text-gray-500'
               }`}
             >
