@@ -25,14 +25,9 @@ export default function Hero() {
           </h1>
 
           {/* Description */}
-          <p className="text-gray-300 text-base md:text-lg mb-6 md:mb-8 max-w-md">
+          <p className="text-gray-300 text-base md:text-lg mb-8 md:mb-12 max-w-md">
             Transform your body and mind with expert guidance, state-of-the-art equipment, and a community that motivates you every step of the way.
           </p>
-
-          {/* CTA Button */}
-          <button className="bg-white text-black px-6 md:px-8 py-2.5 md:py-3 rounded-md font-semibold hover:bg-gray-200 transition mb-8 md:mb-12">
-            Get Started
-          </button>
 
           {/* Social Icons */}
           <div className="flex items-center space-x-6">

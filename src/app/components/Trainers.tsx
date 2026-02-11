@@ -107,7 +107,7 @@ export default function Trainers() {
           {infiniteTrainers.map((trainer, index) => (
             <div 
               key={`${trainer.id}-${index}`}
-              className="shrink-0 w-[calc(100vw-80px)] max-w-70 h-100 relative overflow-hidden rounded-3xl"
+              className="shrink-0 w-[calc(100vw-80px)] max-w-70 h-80 relative overflow-hidden rounded-3xl"
             >
               <Image
                 src={trainer.image}

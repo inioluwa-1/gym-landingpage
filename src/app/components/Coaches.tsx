@@ -47,6 +47,7 @@ export default function Coaches() {
             <button 
               className="text-white px-8 py-3.5 rounded-md font-semibold transition" 
               style={{ backgroundColor: '#FF0336' }}
+              onClick={() => window.location.reload()}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FF5A7A'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FF0336'}
               onTouchStart={(e) => e.currentTarget.style.backgroundColor = '#FF5A7A'}
