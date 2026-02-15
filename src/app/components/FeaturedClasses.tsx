@@ -89,7 +89,7 @@ export default function FeaturedClasses() {
             <span 
               className="text-sm md:text-base font-bold px-6 py-2 rounded-full"
               style={{ backgroundColor: '#FF0336', color: 'white' }}
-            >
+            >3
               OUR FEATURED CLASS
             </span>
           </div>

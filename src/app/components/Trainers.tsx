@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, Autoplay } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
 
 export default function Trainers() {
   const trainers = [
@@ -13,79 +18,11 @@ export default function Trainers() {
     { id: 6, image: '/trainersix.png' }
   ];
 
-  // Duplicate trainers for infinite scroll effect
-  const infiniteTrainers = [...trainers, ...trainers, ...trainers];
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
-
-    // Set initial scroll position to the middle set
-    scrollContainer.scrollLeft = scrollContainer.scrollWidth / 3;
-
-    let scrollInterval: NodeJS.Timeout;
-
-    const startAutoScroll = () => {
-      scrollInterval = setInterval(() => {
-        if (scrollContainer) {
-          const cardWidth = 280;
-          const gap = 16;
-          const scrollAmount = cardWidth + gap;
-          
-          scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
-      }, 3000);
-    };
-
-    const handleScroll = () => {
-      if (!scrollContainer) return;
-
-      const scrollWidth = scrollContainer.scrollWidth;
-      const scrollLeft = scrollContainer.scrollLeft;
-      const clientWidth = scrollContainer.clientWidth;
-
-      // When reaching the end of the second set, jump back to the start of the second set
-      if (scrollLeft >= (scrollWidth / 3) * 2) {
-        scrollContainer.style.scrollBehavior = 'auto';
-        scrollContainer.scrollLeft = scrollWidth / 3;
-        scrollContainer.style.scrollBehavior = 'smooth';
-      }
-      // When reaching the start of the first set, jump to the start of the second set
-      else if (scrollLeft <= scrollWidth / 3 - clientWidth) {
-        scrollContainer.style.scrollBehavior = 'auto';
-        scrollContainer.scrollLeft = scrollWidth / 3;
-        scrollContainer.style.scrollBehavior = 'smooth';
-      }
-    };
-
-    // Only auto-scroll on mobile
-    const checkMobile = () => {
-      if (window.innerWidth < 768) {
-        startAutoScroll();
-        scrollContainer?.addEventListener('scroll', handleScroll);
-      } else {
-        clearInterval(scrollInterval);
-        scrollContainer?.removeEventListener('scroll', handleScroll);
-      }
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => {
-      clearInterval(scrollInterval);
-      scrollContainer?.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
-
   return (
-    <section className="py-12 md:py-20 px-4 md:px-8 bg-gray-50">
+    <section className="py-12 md:py-20 px-0 md:px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-12 md:mb-16 px-4 md:px-0">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
             Meet Our Trainers
           </h2>
@@ -94,29 +31,42 @@ export default function Trainers() {
           </p>
         </div>
 
-        {/* Mobile Carousel */}
-        <div 
-          ref={scrollRef}
-          className="md:hidden flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-4 -mx-4"
-          style={{ 
-            scrollbarWidth: 'none', 
-            msOverflowStyle: 'none',
-            scrollBehavior: 'smooth'
-          }}
-        >
-          {infiniteTrainers.map((trainer, index) => (
-            <div 
-              key={`${trainer.id}-${index}`}
-              className="shrink-0 w-[calc(100vw-80px)] max-w-70 h-80 relative overflow-hidden rounded-3xl"
-            >
-              <Image
-                src={trainer.image}
-                alt={`Trainer ${trainer.id}`}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))}
+        {/* Mobile Carousel with Coverflow Effect */}
+        <div className="md:hidden">
+          <Swiper
+            effect="coverflow"
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView="auto"
+            spaceBetween={10}
+            coverflowEffect={{
+              rotate: 30,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: false,
+            }}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            modules={[EffectCoverflow, Autoplay]}
+            className="trainers-swiper"
+          >
+            {trainers.map((trainer) => (
+              <SwiperSlide key={trainer.id}>
+                <div className="w-[85vw] h-80 relative overflow-hidden rounded-3xl">
+                  <Image
+                    src={trainer.image}
+                    alt={`Trainer ${trainer.id}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
 
         {/* Desktop Grid */}
@@ -184,8 +134,14 @@ export default function Trainers() {
       </div>
 
       <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
+        .trainers-swiper {
+          width: 100%;
+          padding: 20px 0 40px;
+        }
+        .trainers-swiper .swiper-slide {
+          width: auto;
+          display: flex;
+          justify-content: center;
         }
       `}</style>
     </section>
