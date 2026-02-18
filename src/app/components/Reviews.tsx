@@ -3,10 +3,18 @@
 import { ChevronLeft, ChevronRight, Star, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+
+const API_URL = 'https://gym-backend-zbz2.onrender.com/api';
 
 export default function Reviews() {
+  const { user, openAuthModal } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     rating: 5,
@@ -33,60 +41,108 @@ export default function Reviews() {
 
   const [reviews, setReviews] = useState(defaultReviews);
 
-  // Load reviews from localStorage on mount
+  // Fetch reviews from API on mount
   useEffect(() => {
-    const savedReviews = localStorage.getItem('userReviews');
-    if (savedReviews) {
-      const parsedReviews = JSON.parse(savedReviews);
-      setReviews([...defaultReviews, ...parsedReviews]);
-    }
+    fetchReviews();
   }, []);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`${API_URL}/reviews`);
+      const data = await response.json();
+      
+      if (data.success && data.data.length > 0) {
+        setReviews(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      // Keep default reviews if API fails
+    }
+  };
 
   // Auto-play carousel
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % reviews.length);
-    }, 5000); // Change every 5 seconds
+      handleTransition((prev) => (prev + 1) % reviews.length);
+    }, 4000); // Change every 5 seconds
 
     return () => clearInterval(timer);
   }, [reviews.length]);
 
+  const handleTransition = (nextIndexOrFn: number | ((prev: number) => number)) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex(nextIndexOrFn);
+      setIsTransitioning(false);
+    }, 300); // Match CSS transition duration
+  };
+
   const nextReview = () => {
-    setCurrentIndex((prev) => (prev + 1) % reviews.length);
+    handleTransition((prev) => (prev + 1) % reviews.length);
   };
 
   const prevReview = () => {
-    setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+    handleTransition((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSuccessMessage('');
+    setErrorMessage('');
     
     if (!formData.name.trim() || !formData.text.trim()) {
-      alert('Please fill in all fields');
+      setErrorMessage('Please fill in all fields');
       return;
     }
 
-    // Get existing reviews from localStorage
-    const savedReviews = localStorage.getItem('userReviews');
-    const existingReviews = savedReviews ? JSON.parse(savedReviews) : [];
-    
-    // Add new review
-    const newReview = {
-      name: formData.name,
-      rating: formData.rating,
-      text: formData.text
-    };
-    
-    const updatedUserReviews = [...existingReviews, newReview];
-    localStorage.setItem('userReviews', JSON.stringify(updatedUserReviews));
-    
-    // Update state
-    setReviews([...defaultReviews, ...updatedUserReviews]);
-    
-    // Reset form and close modal
-    setFormData({ name: '', rating: 5, text: '' });
-    setIsModalOpen(false);
+    if (formData.text.length < 10) {
+      setErrorMessage('Review must be at least 10 characters long');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Prepare review data
+      const reviewData = {
+        name: user ? user.name : formData.name,
+        rating: formData.rating,
+        text: formData.text,
+        userId: user ? user._id : undefined
+      };
+
+      const response = await fetch(`${API_URL}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccessMessage('Review submitted successfully! Thank you for your feedback.');
+        // Refresh reviews from API
+        await fetchReviews();
+        // Set to first review (the newly posted one)
+        setCurrentIndex(0);
+        // Reset form
+        setFormData({ name: '', rating: 5, text: '' });
+        // Close modal after 2 seconds
+        setTimeout(() => {
+          setIsModalOpen(false);
+          setSuccessMessage('');
+        }, 2000);
+      } else {
+        setErrorMessage(data.message || 'Failed to submit review. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      setErrorMessage('Failed to submit review. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -102,7 +158,15 @@ export default function Reviews() {
           </div>
 
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              // Check if user is logged in
+              if (!user) {
+                openAuthModal();
+                return;
+              }
+              
+              setIsModalOpen(true);
+            }}
             className="text-white px-4 md:px-6 py-2 md:py-3 rounded-md text-sm md:text-base font-semibold hover:opacity-90 transition"
             style={{ backgroundColor: '#FF0336' }}
           >
@@ -112,7 +176,7 @@ export default function Reviews() {
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl max-w-md w-full p-6 md:p-8 relative">
               {/* Close Button */}
               <button
@@ -125,6 +189,20 @@ export default function Reviews() {
               <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">Share Your Opinion</h3>
 
               <form onSubmit={handleSubmit}>
+                {/* Success Message */}
+                {successMessage && (
+                  <div className="mb-4 p-3 bg-green-500 rounded-lg text-sm text-white">
+                    {successMessage}
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {errorMessage && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                    {errorMessage}
+                  </div>
+                )}
+
                 {/* Name Input */}
                 <div className="mb-4">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -132,12 +210,16 @@ export default function Reviews() {
                   </label>
                   <input
                     type="text"
-                    value={formData.name}
+                    value={user ? user.name : formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 text-black"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 text-black disabled:bg-gray-100 disabled:cursor-not-allowed"
                     placeholder="Enter your name"
-                    required
+                    disabled={!!user}
+                    required={!user}
                   />
+                  {user && (
+                    <p className="text-xs text-gray-500 mt-1">Logged in as {user.name}</p>
+                  )}
                 </div>
 
                 {/* Rating */}
@@ -180,21 +262,24 @@ export default function Reviews() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full text-white py-3 rounded-lg font-semibold transition"
+                  disabled={isLoading}
+                  className="w-full text-white py-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ backgroundColor: '#FF0336' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FF5A7A'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FF0336'}
-                  onTouchStart={(e) => e.currentTarget.style.backgroundColor = '#FF5A7A'}
+                  onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#FF5A7A')}
+                  onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#FF0336')}
+                  onTouchStart={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#FF5A7A')}
                   onTouchEnd={(e) => {
-                    const element = e.currentTarget;
-                    setTimeout(() => {
-                      if (element) {
-                        element.style.backgroundColor = '#FF0336';
-                      }
-                    }, 300);
+                    if (!isLoading) {
+                      const element = e.currentTarget;
+                      setTimeout(() => {
+                        if (element) {
+                          element.style.backgroundColor = '#FF0336';
+                        }
+                      }, 300);
+                    }
                   }}
                 >
-                  Submit Review
+                  {isLoading ? 'Submitting...' : 'Submit Review'}
                 </button>
               </form>
             </div>
@@ -250,7 +335,11 @@ export default function Reviews() {
           <div className="order-1 lg:order-2" data-aos="fade-up" data-aos-delay="100">
             <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 md:mb-8">
               {/* Current Card */}
-              <div className="bg-white rounded-2xl p-6 md:p-8 shadow-md flex-1">
+              <div 
+                className={`bg-white rounded-2xl p-6 md:p-8 shadow-md flex-1 transition-all duration-500 ease-in-out ${
+                  isTransitioning ? 'opacity-0 transform translate-x-4' : 'opacity-100 transform translate-x-0'
+                }`}
+              >
                 <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
                   {reviews[currentIndex].name}
                 </h3>
@@ -272,7 +361,11 @@ export default function Reviews() {
               </div>
 
               {/* Next Card Preview (faded) */}
-              <div className="hidden md:block bg-white rounded-2xl p-6 md:p-8 shadow-md flex-1 opacity-40">
+              <div 
+                className={`hidden md:block bg-white rounded-2xl p-6 md:p-8 shadow-md flex-1 transition-all duration-500 ease-in-out ${
+                  isTransitioning ? 'opacity-20 transform translate-x-4' : 'opacity-40 transform translate-x-0'
+                }`}
+              >
                 <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
                   {reviews[(currentIndex + 1) % reviews.length].name}
                 </h3>

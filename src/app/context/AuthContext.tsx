@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 interface User {
   _id: string;
@@ -14,6 +14,8 @@ interface AuthContextType {
   login: (userData: any) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  openAuthModal: () => void;
+  setOpenAuthModal: (callback: () => void) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authModalCallback, setAuthModalCallback] = useState<(() => void) | null>(null);
 
   useEffect(() => {
     // Check if user is logged in on mount
@@ -51,8 +54,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false);
   };
 
+  const openAuthModal = useCallback(() => {
+    if (authModalCallback) {
+      authModalCallback();
+    }
+  }, [authModalCallback]);
+
+  const setOpenAuthModal = useCallback((callback: () => void) => {
+    setAuthModalCallback(() => callback);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated, openAuthModal, setOpenAuthModal }}>
       {children}
     </AuthContext.Provider>
   );

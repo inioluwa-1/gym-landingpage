@@ -11,7 +11,12 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const { user, login, logout, isAuthenticated } = useAuth();
+  const { user, login, logout, isAuthenticated, setOpenAuthModal } = useAuth();
+
+  // Register the auth modal callback
+  useEffect(() => {
+    setOpenAuthModal(() => setShowAuthModal(true));
+  }, [setOpenAuthModal]);
 
   // Close mobile menu on scroll
   useEffect(() => {
