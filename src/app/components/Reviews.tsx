@@ -41,9 +41,26 @@ export default function Reviews() {
 
   const [reviews, setReviews] = useState(defaultReviews);
 
-  // Fetch reviews from API on mount
+  // Wake up the server on mount (Render free tier cold start)
   useEffect(() => {
-    fetchReviews();
+    const wakeUpServer = async () => {
+      try {
+        // Ping the backend to wake it up (won't wait for response)
+        fetch(`${API_URL.replace('/api', '')}/api/test`, {
+          method: 'GET',
+        }).catch(() => {
+          // Silently fail, this is just to wake up the server
+        });
+      } catch (error) {
+        // Ignore errors
+      }
+    };
+
+    wakeUpServer();
+    // Fetch reviews after a short delay to give server time to wake up
+    setTimeout(() => {
+      fetchReviews();
+    }, 1000);
   }, []);
 
   const fetchReviews = async () => {
@@ -90,7 +107,9 @@ export default function Reviews() {
     setSuccessMessage('');
     setErrorMessage('');
     
-    if (!formData.name.trim() || !formData.text.trim()) {
+    // Check name (use user.name if logged in, otherwise formData.name)
+    const nameToCheck = user ? user.name : formData.name;
+    if (!nameToCheck.trim() || !formData.text.trim()) {
       setErrorMessage('Please fill in all fields');
       return;
     }
@@ -101,6 +120,7 @@ export default function Reviews() {
     }
 
     setIsLoading(true);
+    setErrorMessage('');
 
     try {
       // Prepare review data
@@ -111,17 +131,23 @@ export default function Reviews() {
         userId: user ? user._id : undefined
       };
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 65000); // 65 second timeout
+
       const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(reviewData)
+        body: JSON.stringify(reviewData),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
       const data = await response.json();
 
       if (data.success) {
+        setErrorMessage('');
         setSuccessMessage('Review submitted successfully! Thank you for your feedback.');
         // Refresh reviews from API
         await fetchReviews();
@@ -137,9 +163,13 @@ export default function Reviews() {
       } else {
         setErrorMessage(data.message || 'Failed to submit review. Please try again.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting review:', error);
-      setErrorMessage('Failed to submit review. Please try again.');
+      if (error.name === 'AbortError') {
+        setErrorMessage('Request timed out. The server might be sleeping. Please wait a moment and try again.');
+      } else {
+        setErrorMessage('Failed to connect to server. Please check your connection and try again.');
+      }
     } finally {
       setIsLoading(false);
     }

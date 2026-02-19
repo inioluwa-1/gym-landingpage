@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -32,6 +32,15 @@ export default function BMICalculator() {
   const [bmiHistory, setBmiHistory] = useState<BMIRecord[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+
+  // Wake up the server on mount (Render free tier cold start)
+  useEffect(() => {
+    fetch(`${API_URL.replace('/api', '')}/api/test`, {
+      method: 'GET',
+    }).catch(() => {
+      // Silently fail, this is just to wake up the server
+    });
+  }, []);
 
   const calculateBMI = async () => {
     // Check if user is logged in

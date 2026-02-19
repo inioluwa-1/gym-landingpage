@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 interface AuthModalProps {
@@ -19,6 +19,17 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Wake up the server when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      fetch('https://gym-backend-zbz2.onrender.com/api/test', {
+        method: 'GET',
+      }).catch(() => {
+        // Silently fail, this is just to wake up the server
+      });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
