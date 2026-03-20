@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FitGuru Gym Landing Page
 
-## Getting Started
+A modern, interactive gym and fitness landing page built with Next.js, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+This project includes a full marketing experience (hero, classes, trainers, pricing, testimonials) plus user-facing features like authentication, BMI/BMR calculation with history, and review submission.
+
+## Demo
+
+- Frontend: add your deployed URL here
+- Backend API used by this app: https://gym-backend-zbz2.onrender.com
+
+## Features
+
+- Responsive landing page optimized for desktop and mobile.
+- Smooth section navigation (Home, About, Services, Contact).
+- Auth modal for sign up and log in.
+- Auth state persistence using localStorage.
+- BMI and BMR calculator with:
+	- auto unit handling for height input (cm or feet)
+	- activity-factor based BMR adjustment
+	- saved BMI history per logged-in user
+- Testimonial carousel with autoplay and manual controls.
+- Logged-in users can submit reviews.
+- Scroll animations with AOS.
+- Custom loader and modern component-based layout.
+
+## Tech Stack
+
+- Framework: Next.js 16 (App Router)
+- Language: TypeScript
+- UI: React 19, Tailwind CSS 4
+- Animations: AOS
+- Icons: lucide-react
+- Carousel/slider support: Swiper
+
+## Project Structure
+
+```text
+src/
+	app/
+		components/
+			Navbar.tsx
+			Hero.tsx
+			Stats.tsx
+			WhyChooseUs.tsx
+			Coaches.tsx
+			Trainers.tsx
+			FeaturedClasses.tsx
+			BMICalculator.tsx
+			Pricing.tsx
+			Reviews.tsx
+			CallToAction.tsx
+			Footer.tsx
+			AuthModal.tsx
+			AOSInit.tsx
+			PageLoader.tsx
+		context/
+			AuthContext.tsx
+		globals.css
+		layout.tsx
+		page.tsx
+```
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone <your-repo-url>
+cd gym-landingpage
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Start development server
+- `npm run build` - Build production app
+- `npm run start` - Run production server
+- `npm run lint` - Run ESLint
 
-## Learn More
+## Backend Integration
 
-To learn more about Next.js, take a look at the following resources:
+This frontend currently uses a hosted backend:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Base URL: `https://gym-backend-zbz2.onrender.com/api`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+API usage in this project includes:
 
-## Deploy on Vercel
+- `/auth/signup`
+- `/auth/login`
+- `/bmi` and `/bmi/:userId`
+- `/reviews`
+- `/test` (server wake-up ping)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Important notes:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- API URLs are currently hardcoded inside components.
+- On free-tier hosting, initial API calls may be slow due to cold starts.
+
+## Deployment
+
+You can deploy this project on Vercel:
+
+1. Push your code to GitHub.
+2. Import the repository into Vercel.
+3. Build command: `npm run build`
+4. Output setting: default Next.js settings
+5. Deploy
+
+## Suggested Improvements
+
+- Move API base URL to environment variables.
+- Add form validation with better user feedback.
+- Add automated tests (unit/integration).
+- Add SEO metadata and Open Graph tags.
+- Replace placeholder metadata in `layout.tsx`.
+
+## License
+
+Choose and add a license (for example, MIT) if you plan to open-source this project.
